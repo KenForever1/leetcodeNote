@@ -41,3 +41,41 @@ public:
         return res;
     }
 };
+
+
+// 不同的子序列
+// 动态规划, 创建二维数组 resArray, 其中 resArray[i][j] 表示在 s[i:] 的子序列中 t[j:] 出现的个数。
+class Solution {
+public:
+    int numDistinct(string s, string t) {
+        int m = s.length();
+        int n = t.length();
+        if (m < n) {
+            return 0;
+        }
+        std::vector<std::vector<long>> resArray(m + 1, std::vector<long>(n + 1));
+
+        for (auto i = 0; i <= m; i++) {
+            resArray[i][n] = 1;
+        }
+
+        for (auto j = 0; j < n; j++) {
+            resArray[m][j] = 0;
+        }
+
+        for (auto i = m - 1; i >= 0; i--) {
+            char sChar = s.at(i);
+            for (auto j = n - 1; j >= 0; j--) {
+                char tChar = t.at(j);
+                if (sChar == tChar) {
+                    resArray[i][j] = resArray[i + 1][j + 1] + resArray[i + 1][j];
+                } else {
+                    resArray[i][j] = resArray[i + 1][j];
+                }
+            }
+        }
+
+        return resArray[0][0];
+
+    }
+};
